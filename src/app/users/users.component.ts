@@ -1,9 +1,10 @@
 import { Component,Input,Output,EventEmitter } from '@angular/core';
 import { type User } from './users.model';
+import { CardComponent } from "../shared/card/card.component";
 
 @Component({
   selector: 'app-users',
-  imports: [],
+  imports: [CardComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
@@ -18,7 +19,6 @@ export class UsersComponent {
     return 'assets/users/'+ this.User.avatar;
   }
 onSelectUsersComp(){
-  debugger
   this.select.emit(this.User.id);
  }
 }
