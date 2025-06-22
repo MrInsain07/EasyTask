@@ -1,7 +1,8 @@
-import { Component,Output,EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { type newTaskData } from '../task/task.model';
 import { CardComponent } from "../../shared/card/card.component";
+import { TasksServices } from '../tasks.services';
 
 @Component({
   selector: 'app-new-task',
@@ -10,21 +11,24 @@ import { CardComponent } from "../../shared/card/card.component";
   styleUrl: './new-task.component.css'
 })
 export class NewTaskComponent {
-@Output() AddTaskCanceled=new EventEmitter<boolean>();
-@Output() Tasksubmit = new EventEmitter<newTaskData>();
-enterTitle:string='';
-enterSummary:string='';
-enterDueDate:string='';
-onAddTaskCancel(){
-  return this.AddTaskCanceled.emit(false);
-}
-onSubmit(){
- this.Tasksubmit.emit({
-  title:this.enterTitle,
-  summary:this.enterSummary,
-  date:this.enterDueDate
- });
-}
+  @Input({ required: true }) UserId!: string;
+  @Output() onCloses = new EventEmitter<boolean>();
+  
+  enterTitle: string = '';
+  enterSummary: string = '';
+  enterDueDate: string = '';
+  private taskServices = inject(TasksServices)
+  onClose() {
+    return this.onCloses.emit(false);
+  }
+  onSubmit() {
+    this.taskServices.addTasks({
+      title: this.enterTitle,
+      summary: this.enterSummary,
+      date: this.enterDueDate
+    }, this.UserId);
+    this.onCloses.emit(false);
+  }
 
 
 }
